@@ -48,7 +48,7 @@ def get_input():
     else:
         print("unsupported key")
 
-    feature = 'group'
+    feature = 'country'
     model = models.load_model(MODEL_PATH[feature])
     word2vec = Word2Vec.load(WORD2VEC_PATH[feature])
     result = return_result(text, feature, model, word2vec)

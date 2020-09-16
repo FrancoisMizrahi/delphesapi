@@ -62,15 +62,15 @@ pypi:
 # ----------------------------------
 #      DOCKER
 # ----------------------------------
+
 PROJECT_ID=delphes
 DOCKER_IMAGE_NAME=delphes_api
-
 
 build_docker:
 	@docker build -t eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME} .
 
 run_docker:
-	@docker run -p 8080:8080 eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME}
+	@docker run -e "PORT=8080" -p 8080:8080 eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME}
 
 push_docker:
 	@docker push eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME}
