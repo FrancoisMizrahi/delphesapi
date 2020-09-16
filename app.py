@@ -32,11 +32,15 @@ def get_input():
     user_input = request.get_data().decode()
     if user_input[:3] == "tex":
         print(user_input)
-        text = user_input.replace("+", " ").replace("text=", "")
+        text = []
+        entry = user_input.replace("+", " ").replace("text=", "")
+        text.append(entry)
     elif user_input[:3] == "url":
         url = user_input.replace("url=", "").replace("%3A", ":").replace("%2F", "/")
         input_interface = InputInterface()
-        text = input_interface.text_from_url(url)
+        text = []
+        entry = input_interface.text_from_url(url)
+        text.append(entry)
     elif user_input[:3] == "twe":
         username = user_input.replace("tweet=", "")
         input_interface = InputInterface()
@@ -44,7 +48,7 @@ def get_input():
     else:
         print("unsupported key")
 
-    feature = 'country'
+    feature = 'group'
     model = models.load_model(MODEL_PATH[feature])
     word2vec = Word2Vec.load(WORD2VEC_PATH[feature])
     result = return_result(text, feature, model, word2vec)
@@ -61,7 +65,7 @@ def format_input(text, word2vec):
 
 def return_result(formated_input, feature, model, word2vec):
     if feature=='country':
-        pond = np.sqrt(clean_df.groupby('country').count()['content'].values)
+        pond = (clean_df.groupby('country').count()['content'].values)**0.75
         result = (1000*np.mean(model.predict(format_input(formated_input, word2vec)), axis=0)/pond).argmax()
         return pd.get_dummies(clean_df['country']).columns[result]
     else:
