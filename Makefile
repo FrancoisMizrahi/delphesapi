@@ -58,3 +58,30 @@ pypi_test:
 
 pypi:
 	@twine upload dist/* -u lologibus2
+
+# ----------------------------------
+#      DOCKER
+# ----------------------------------
+PROJECT_ID=delphes
+DOCKER_IMAGE_NAME=delphes_api
+
+
+build_docker:
+	@docker build -t eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME} .
+
+run_docker:
+	@docker run -p 8080:8080 eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME}
+
+push_docker:
+	@docker push eu.gcr.io/${PROJECT_ID}/${DOCKER_IMAGE_NAME}
+
+# ----------------------------------
+#      GOOGLE CLOUD PLATFORM
+# ----------------------------------
+
+run_deploy_gcloud:
+	@gcloud run deploy --image eu.gcr.io/delphes/delphes_api --platform managed --region europe-west1
+
+
+
+
