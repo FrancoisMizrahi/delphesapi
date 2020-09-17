@@ -20,7 +20,7 @@ WORD2VEC_PATH = {"group":"delphesapi/data/word2vec_group",
                 "country":"delphesapi/data/word2vec_country",
                 "name":"delphesapi/data/word2vec_deputies"}
 
-clean_df = pd.read_pickle("delphesapi/data/clean_df")
+clean_df = pd.read_pickle("delphesapi/data/clean_df2")
 
 app = Flask(__name__)
 # CORS(app)
