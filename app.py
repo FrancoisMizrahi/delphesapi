@@ -35,7 +35,8 @@ def hello():
 def get_input():
     api_input = request.get_data().decode().split("&")
     user_input = api_input[0]
-    feature = user_input[1].replace("feature=", "")
+    feature = api_input[1].replace("feature=", "")
+
     if user_input[:3] == "tex":
         print(user_input)
         text = []
