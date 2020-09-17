@@ -13,8 +13,8 @@ from delphesapi.input_interface import InputInterface
 
 PATH_TO_MODEL = "delphesapi/data/model_deputies"
 DATA_REF_PATH = "raw_data/cleaned_tweet_df"
-MODEL_PATH = {"country":"delphesapi/data/model_country"}
-WORD2VEC_PATH = {"country":"delphesapi/data/word2vec_country"}
+MODEL_PATH = {"group":"delphesapi/data/model_group"}
+WORD2VEC_PATH = {"group":"delphesapi/data/word2vec_group"}
 
 clean_df = pd.read_pickle("delphesapi/data/clean_df")
 
