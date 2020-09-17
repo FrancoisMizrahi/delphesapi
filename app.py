@@ -11,10 +11,14 @@ from tensorflow.keras import models
 
 from delphesapi.input_interface import InputInterface
 
-PATH_TO_MODEL = "delphesapi/data/model_deputies"
+PATH_TO_MODEL = "delphesapi/data"
 DATA_REF_PATH = "raw_data/cleaned_tweet_df"
-MODEL_PATH = {"group":"delphesapi/data/model_group"}
-WORD2VEC_PATH = {"group":"delphesapi/data/word2vec_group"}
+MODEL_PATH = {"group":"delphesapi/data/model_group",
+            "country":"delphesapi/data/model_country",
+            "name":"delphesapi/data/model_deputies"}
+WORD2VEC_PATH = {"group":"delphesapi/data/word2vec_group",
+                "country":"delphesapi/data/word2vec_country",
+                "name":"delphesapi/data/word2vec_deputies"}
 
 clean_df = pd.read_pickle("delphesapi/data/clean_df")
 
@@ -64,10 +68,10 @@ def format_input(text, word2vec):
     return formated_input
 
 def return_result(formated_input, feature, model, word2vec):
-    if feature=='country':
-        pond = (clean_df.groupby('country').count()['content'].values)**0.75
+    if feature=='country' or feature =='group':
+        pond = (clean_df.groupby(feature).count()['content'].values)**0.75
         result = (1000*np.mean(model.predict(format_input(formated_input, word2vec)), axis=0)/pond).argmax()
-        return pd.get_dummies(clean_df['country']).columns[result]
+        return pd.get_dummies(clean_df[feature]).columns[result]
     else:
         result = np.mean(model.predict(format_input(formated_input, word2vec)), axis=0).argmax()
         return pd.get_dummies(clean_df[feature]).columns[result]
