@@ -55,10 +55,10 @@ def get_input():
     else:
         print("unsupported key")
 
-    nbre_resultats = 2
+    nbre_resultats = 1
     model = models.load_model(MODEL_PATH[feature])
     word2vec = Word2Vec.load(WORD2VEC_PATH[feature])
-    result = return_result(text, feature, model, word2vec)
+    result = return_result(text, feature, model, word2vec, nbre_resultats)
     return Response(result, status=201, mimetype='application/json')
 
 
@@ -70,7 +70,7 @@ def format_input(text, word2vec):
     formated_input = pad_sequences(X_train, padding='post',value=-1000, dtype='float32')
     return formated_input
 
-def return_result(formated_input, feature, model, word2vec):
+def return_result(formated_input, feature, model, word2vec, nbre_resultats):
     if feature=='country':
         pond = (clean_df.groupby(feature).count()['content'].values)**0.85
         result = (1000*np.mean(model.predict(format_input(formated_input, word2vec)), axis=0)/pond)
@@ -80,7 +80,7 @@ def return_result(formated_input, feature, model, word2vec):
         return final_result
     elif feature =='group':
         pond = (clean_df.groupby(feature).count()['content'].values)**0.92
-        result = (10000*np.mean(model_group.predict(format_input(text, word2vec_group)), axis=0)*[0.85,1,0.75,1,1.4,0.95,0.9,1.3]/pond)
+        result = (10000*np.mean(model.predict(format_input(formated_input, word2vec)), axis=0)*[0.85,1,0.85,1,1.2,0.9,0.9,1.3]/pond)
         final_result = []
         for i in range(nbre_resultats):
             final_result.append(pd.get_dummies(clean_df[feature]).columns[result.argsort()[-nbre_resultats:][::-1]][i])
