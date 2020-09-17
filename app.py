@@ -33,7 +33,9 @@ def hello():
 
 @app.route('/get_input', methods=["POST"])
 def get_input():
-    user_input = request.get_data().decode()
+    api_input = request.get_data().decode().split("&")
+    user_input = api_input[0]
+    feature = user_input[1].replace("feature=", "")
     if user_input[:3] == "tex":
         print(user_input)
         text = []
@@ -52,7 +54,6 @@ def get_input():
     else:
         print("unsupported key")
 
-    feature = 'group'
     nbre_resultats = 2
     model = models.load_model(MODEL_PATH[feature])
     word2vec = Word2Vec.load(WORD2VEC_PATH[feature])
