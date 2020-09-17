@@ -53,6 +53,7 @@ def get_input():
         print("unsupported key")
 
     feature = 'group'
+    nbre_resultats = 2
     model = models.load_model(MODEL_PATH[feature])
     word2vec = Word2Vec.load(WORD2VEC_PATH[feature])
     result = return_result(text, feature, model, word2vec)
@@ -68,13 +69,26 @@ def format_input(text, word2vec):
     return formated_input
 
 def return_result(formated_input, feature, model, word2vec):
-    if feature=='country' or feature =='group':
-        pond = (clean_df.groupby(feature).count()['content'].values)**0.75
-        result = (1000*np.mean(model.predict(format_input(formated_input, word2vec)), axis=0)/pond).argmax()
-        return pd.get_dummies(clean_df[feature]).columns[result]
+    if feature=='country':
+        pond = (clean_df.groupby(feature).count()['content'].values)**0.85
+        result = (1000*np.mean(model.predict(format_input(formated_input, word2vec)), axis=0)/pond)
+        final_result = []
+        for i in range(nbre_resultats):
+            final_result.append(pd.get_dummies(clean_df[feature]).columns[result.argsort()[-nbre_resultats:][::-1]][i])
+        return final_result
+    elif feature =='group':
+        pond = (clean_df.groupby(feature).count()['content'].values)**0.92
+        result = (10000*np.mean(model_group.predict(format_input(text, word2vec_group)), axis=0)*[0.85,1,0.75,1,1.4,0.95,0.9,1.3]/pond)
+        final_result = []
+        for i in range(nbre_resultats):
+            final_result.append(pd.get_dummies(clean_df[feature]).columns[result.argsort()[-nbre_resultats:][::-1]][i])
+        return final_result
     else:
-        result = np.mean(model.predict(format_input(formated_input, word2vec)), axis=0).argmax()
-        return pd.get_dummies(clean_df[feature]).columns[result]
+        result = np.mean(model.predict(format_input(formated_input, word2vec)), axis=0)
+        final_result = []
+        for i in range(nbre_resultats):
+            final_result.append(pd.get_dummies(clean_df[feature]).columns[result.argsort()[-nbre_resultats:][::-1]][i])
+        return final_result
 
 # Sentence embedding
 def embed_sentence(word2vec, sentence):
