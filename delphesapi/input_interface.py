@@ -93,7 +93,7 @@ class InputInterface:
         content_list = []
         # import ipdb
         # ipdb.set_trace()
-        for tweet in Cursor(self.api.user_timeline,id=username,tweet_mode='extended').items(10):
+        for tweet in Cursor(self.api.user_timeline,id=username,tweet_mode='extended').items(50):
             if "retweeted_status" in dir(tweet):
                 tweet=tweet.retweeted_status.full_text
                 content_list.append(tweet)
